@@ -147,7 +147,8 @@ export class CartRepo {
               'virtualPrice', "Product"."virtualPrice",
               'brandId', "Product"."brandId",
               'images', "Product"."images",
-              'variants', "Product"."variants"
+              'variants', "Product"."variants",
+			  'description', "Product"."description"
             )
           )
         ) ORDER BY "CartItem"."updatedAt" DESC

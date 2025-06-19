@@ -21,13 +21,15 @@ export const CartItemDetailSchema = z.object({
 	cartItems: z.array(
 		CartItemSchema.extend({
 			sku: SKUSchema.extend({
-				product: ProductSchema.omit({
-					createdById: true,
-					updatedById: true,
-					deletedById: true,
-					deletedAt: true,
-					createdAt: true,
-					updatedAt: true,
+				product: ProductSchema.pick({
+					id: true,
+					basePrice: true,
+					brandId: true,
+					description: true,
+					images: true,
+					name: true,
+					variants: true,
+					virtualPrice: true,
 				}),
 			}).omit({
 				createdById: true,

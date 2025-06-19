@@ -9,6 +9,7 @@ export const UpdateMeBodySchema = z
 		name: z.string().max(255),
 		phoneNumber: z.string().optional(),
 		avatar: z.string().url().optional(),
+		address: z.string().nullable(),
 	})
 	.strict()
 

@@ -234,7 +234,7 @@ export class ProductRepo {
 					...productData,
 					updatedById,
 					categories: {
-						connect: categories.map((category) => ({ id: category })),
+						set: categories.map((category) => ({ id: category })),
 					},
 				},
 			}),
