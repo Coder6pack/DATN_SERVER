@@ -36,7 +36,12 @@ export const GetProductsQuerySchema = z.object({
 		}
 		return value
 	}, z.array(z.coerce.number().int().positive()).optional()),
-	categories: z.array(z.coerce.number().int().positive()).optional(),
+	categories: z.preprocess((value) => {
+		if (typeof value === 'string') {
+			return [Number(value)]
+		}
+		return value
+	}, z.array(z.coerce.number().int().positive()).optional()),
 	minPrice: z.coerce.number().positive().optional(),
 	maxPrice: z.coerce.number().positive().optional(),
 	orderBy: z.enum([OrderBy.Asc, OrderBy.Desc]).default(OrderBy.Desc),

@@ -15,6 +15,7 @@ import {
 	GetOrderListQueryType,
 	GetOrderListResType,
 	UpdateOrderBodyType,
+	UpdateOrderResType,
 } from 'src/routes/order/order.model'
 import { OrderProducer } from 'src/routes/order/order.producer'
 import { PaymentStatus } from 'src/shared/constants/payment.constant'
@@ -27,6 +28,40 @@ export class OrderRepo {
 		private readonly prismaService: PrismaService,
 		private orderProducer: OrderProducer,
 	) {}
+	async listManage(query: GetOrderListQueryType): Promise<GetOrderListResType> {
+		const { page, limit, status } = query
+		const skip = (page - 1) * limit
+		const take = limit
+		const where: Prisma.OrderWhereInput = {
+			status,
+		}
+
+		// Đếm tổng số order
+		const totalItem$ = this.prismaService.order.count({
+			where,
+		})
+		// Lấy list order
+		const data$ = await this.prismaService.order.findMany({
+			where,
+			include: {
+				items: true,
+			},
+			skip,
+			take,
+			orderBy: {
+				createdAt: 'desc',
+			},
+		})
+		const [data, totalItems] = await Promise.all([data$, totalItem$])
+		return {
+			data,
+			page,
+			limit,
+			totalItems,
+			totalPages: Math.ceil(totalItems / limit),
+		}
+	}
+
 	async list(userId: number, query: GetOrderListQueryType): Promise<GetOrderListResType> {
 		const { page, limit, status } = query
 		const skip = (page - 1) * limit
@@ -186,6 +221,24 @@ export class OrderRepo {
 			paymentId,
 		}
 	}
+
+	async detailManage(orderid: number): Promise<GetOrderDetailResType> {
+		const order = await this.prismaService.order.findUnique({
+			where: {
+				id: orderid,
+				// userId,
+				deletedAt: null,
+			},
+			include: {
+				items: true,
+			},
+		})
+		if (!order) {
+			throw OrderNotFoundException
+		}
+		return order
+	}
+
 	async detail(userId: number, orderid: number): Promise<GetOrderDetailResType> {
 		const order = await this.prismaService.order.findUnique({
 			where: {
@@ -235,29 +288,42 @@ export class OrderRepo {
 		}
 	}
 
-	async update({ userId, orderId, body }: { userId: number; orderId: number; body: UpdateOrderBodyType }) {
+	async update({
+		userId,
+		orderId,
+		body,
+	}: {
+		userId: number
+		orderId: number
+		body: UpdateOrderBodyType
+	}): Promise<UpdateOrderResType> {
 		try {
 			const order = await this.prismaService.order.findUniqueOrThrow({
 				where: {
 					id: orderId,
-					userId,
 					deletedAt: null,
 				},
 			})
 			const updatedOrder = await this.prismaService.order.update({
 				where: {
 					id: orderId,
-					userId,
 					deletedAt: null,
 				},
 				data: {
 					status: body.status,
 					updatedById: userId,
 				},
+				omit: {
+					createdById: true,
+					deletedAt: true,
+					deletedById: true,
+					updatedById: true,
+				},
 			})
 			return updatedOrder
 		} catch (error) {
 			if (isNotFoundPrismaError(error)) {
+				console.log('error', error)
 				throw OrderNotFoundException
 			}
 			throw error

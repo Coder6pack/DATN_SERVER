@@ -5,6 +5,7 @@ import {
 	CancelOrderResDTO,
 	CreateOrderBodyDTO,
 	CreateOrderResDTO,
+	GetOrderDetailManageDTO,
 	GetOrderDetailResDTO,
 	GetOrderListQueryDTO,
 	GetOrderListResDTO,
@@ -18,6 +19,12 @@ import { ActiveUser } from 'src/shared/decorators/active-user.decorator'
 @Controller('orders')
 export class OrderController {
 	constructor(private readonly orderService: OrderService) {}
+
+	@Get('/manage')
+	@ZodSerializerDto(GetOrderListResDTO)
+	getManageOrder(@Query() query: GetOrderListQueryDTO) {
+		return this.orderService.listManage(query)
+	}
 
 	@Get()
 	@ZodSerializerDto(GetOrderListResDTO)
@@ -37,6 +44,12 @@ export class OrderController {
 		return this.orderService.detail(userId, param.orderId)
 	}
 
+	@Get('/manage/:orderId')
+	@ZodSerializerDto(GetOrderDetailResDTO)
+	detailManage(@Param() param: GetOrderParamsDTO) {
+		return this.orderService.detailManage(param.orderId)
+	}
+
 	@Put(':orderId')
 	@ZodSerializerDto(CancelOrderResDTO)
 	cancel(@ActiveUser('userId') userId: number, @Param() param: GetOrderParamsDTO, @Body() _: CancelOrderBodyDTO) {
@@ -44,7 +57,7 @@ export class OrderController {
 	}
 
 	@Put('/update-status/:orderId')
-	// @ZodSerializerDto(UpdateOrderResDTO)
+	@ZodSerializerDto(UpdateOrderResDTO)
 	update(@ActiveUser('userId') userId: number, @Param() param: GetOrderParamsDTO, @Body() body: UpdateOrderBodyDTO) {
 		return this.orderService.update({ userId, orderId: param.orderId, body })
 	}

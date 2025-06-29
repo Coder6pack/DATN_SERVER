@@ -5,6 +5,7 @@ generator client {
 generator json {
   provider = "prisma-json-types-generator"
 }
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -18,7 +19,7 @@ model User {
   phoneNumber        String         @db.VarChar(50)
   avatar             String?        @db.VarChar(1000)
   totpSecret         String?        @db.VarChar(1000)
-  address            String?        @db.VarChar(500)@default("")
+  address            String?        @default("") @db.VarChar(500)
   status             UserStatus     @default(INACTIVE)
   roleId             Int
   createdById        Int?
@@ -223,24 +224,23 @@ model SKU {
 }
 
 model Brand {
-  id       Int       @id @default(autoincrement())
-  logo     String    @db.VarChar(1000)
-  products Product[]
-  name     String    @db.VarChar(500)
-
+  id          Int       @id @default(autoincrement())
+  logo        String    @db.VarChar(1000)
+  name        String    @db.VarChar(500)
   createdById Int?
-  createdBy   User? @relation("BrandCreatedBy", fields: [createdById], references: [id], onDelete: SetNull, onUpdate: NoAction)
   updatedById Int?
-  updatedBy   User? @relation("BrandUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull, onUpdate: NoAction)
   deletedById Int?
-  deletedBy   User? @relation("BrandDeletedBy", fields: [deletedById], references: [id], onDelete: SetNull, onUpdate: NoAction)
-
-  deletedAt DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  createdBy   User?     @relation("BrandCreatedBy", fields: [createdById], references: [id], onUpdate: NoAction)
+  deletedBy   User?     @relation("BrandDeletedBy", fields: [deletedById], references: [id], onUpdate: NoAction)
+  updatedBy   User?     @relation("BrandUpdatedBy", fields: [updatedById], references: [id], onUpdate: NoAction)
+  products    Product[]
 
   @@index([deletedAt])
 }
+
 model CartItem {
   id        Int      @id @default(autoincrement())
   quantity  Int
@@ -256,19 +256,19 @@ model CartItem {
 }
 
 model ProductSKUSnapshot {
-  id                  Int      @id @default(autoincrement())
-  productName         String   @db.VarChar(500)
-  skuPrice            Float
-  image               String
-  skuValue            String   @db.VarChar(500)
-  skuId               Int?
-  orderId             Int?
-  quantity            Int
-  productId           Int?
-  createdAt           DateTime @default(now())
-  order               Order?   @relation(fields: [orderId], references: [id], onUpdate: NoAction)
-  product             Product? @relation(fields: [productId], references: [id], onUpdate: NoAction)
-  sku                 SKU?     @relation(fields: [skuId], references: [id], onUpdate: NoAction)
+  id          Int      @id @default(autoincrement())
+  productName String   @db.VarChar(500)
+  skuPrice    Float
+  image       String
+  skuValue    String   @db.VarChar(500)
+  skuId       Int?
+  orderId     Int?
+  quantity    Int
+  productId   Int?
+  createdAt   DateTime @default(now())
+  order       Order?   @relation(fields: [orderId], references: [id], onUpdate: NoAction)
+  product     Product? @relation(fields: [productId], references: [id], onUpdate: NoAction)
+  sku         SKU?     @relation(fields: [skuId], references: [id], onUpdate: NoAction)
 }
 
 model Order {
@@ -291,7 +291,7 @@ model Order {
   user        User                 @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   items       ProductSKUSnapshot[]
   products    Product[]            @relation("OrderToProduct")
-
+  reviews     Review[]
   @@index([deletedAt])
   @@index([status, deletedAt])
 }
@@ -317,12 +317,29 @@ model Review {
   rating    Int
   productId Int
   userId    Int
+  orderId   Int
+  order       Order         @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   product   Product  @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  medias      ReviewMedia[]
+  updateCount Int           @default(0)
+@@unique([orderId, productId])
+  @@index([userId])
+  @@index([productId])
 }
 
+
+model ReviewMedia {
+  id       Int       @id @default(autoincrement())
+  url      String    @db.VarChar(1000)
+  type     MediaType
+  reviewId Int
+  review   Review    @relation(fields: [reviewId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  createdAt DateTime @default(now())
+}
 model PaymentTransaction {
   id                 Int      @id @default(autoincrement())
   gateway            String   @db.VarChar(100)
@@ -350,20 +367,25 @@ model Message {
   toUser     User      @relation("ToUser", fields: [toUserId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
-model SlideShow{
-  id                  Int                  @id @default(autoincrement())
-  image              String
-  createdById         Int
-  updatedById         Int?
-  deletedById         Int?
-  deletedAt           DateTime?
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
-  createdBy           User                 @relation("SlideShowCreatedBy", fields: [createdById], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  deletedBy           User?                @relation("SlideShowDeletedBy", fields: [deletedById], references: [id], onUpdate: NoAction)
-  updatedBy           User?                @relation("SlideShowUpdatedBy", fields: [updatedById], references: [id], onUpdate: NoAction)
+model SlideShow {
+  id          Int       @id @default(autoincrement())
+  image       String
+  createdById Int
+  updatedById Int?
+  deletedById Int?
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  createdBy   User      @relation("SlideShowCreatedBy", fields: [createdById], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  deletedBy   User?     @relation("SlideShowDeletedBy", fields: [deletedById], references: [id], onUpdate: NoAction)
+  updatedBy   User?     @relation("SlideShowUpdatedBy", fields: [updatedById], references: [id], onUpdate: NoAction)
 
   @@index([deletedAt])
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
 }
 
 enum PaymentStatus {

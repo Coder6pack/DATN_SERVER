@@ -30,7 +30,7 @@ export class MediaController {
 	@UseInterceptors(
 		FilesInterceptor('files', 10, {
 			limits: {
-				fileSize: 5 * 1024 * 1024, // 2MB
+				fileSize: 10 * 1024 * 1024, // 2MB
 			},
 		}),
 	)
@@ -38,8 +38,10 @@ export class MediaController {
 		@UploadedFiles(
 			new ParseFilePipeWithUnlink({
 				validators: [
-					new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }),
-					new FileTypeValidator({ fileType: /(jpg|jpeg|png|gif|webp)$/ }),
+					new MaxFileSizeValidator({ maxSize: 10 * 1024 * 1024 }),
+					new FileTypeValidator({
+						fileType: /(jpg|jpeg|png|gif|webp|bmp|svg|tiff|ico|mp4|mov|avi|mkv|webm|flv|wmv|mpeg|mpg)$/i,
+					}),
 				],
 			}),
 		)

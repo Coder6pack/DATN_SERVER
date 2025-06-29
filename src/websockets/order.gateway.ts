@@ -16,7 +16,7 @@ import { Server, Socket } from 'socket.io'
 		credentials: true,
 	},
 })
-export class PaymentGateway {
+export class OrderGateway {
 	@WebSocketServer()
 	server: Server
 
@@ -32,14 +32,7 @@ export class PaymentGateway {
 		console.log(`Client disconnected: ${client.id}`)
 	}
 
-	@SubscribeMessage('send-money')
-	handleEvent(@MessageBody() data: string): string {
-		this.server.emit('receive-money', {
-			data: `Money: ${data}`,
-		})
-		return data
-	}
-	emitPaymentEvent(paymentData: { status: string }) {
-		this.server.emit('payment', paymentData)
+	emitOrderEvent(paymentData: { status: string }) {
+		this.server.emit('orders', paymentData)
 	}
 }

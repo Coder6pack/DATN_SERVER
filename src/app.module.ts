@@ -23,6 +23,7 @@ import { PaymentConsumer } from './queues/payment.consumer'
 import { WebsocketModule } from './websockets/websocket.module'
 import { SlideShowModule } from './routes/slideShow/slide-show.module'
 import { DashboardModule } from './routes/dashboard/dashboard.module'
+import { ReviewModule } from './routes/review/review.module'
 
 @Module({
 	imports: [
@@ -52,6 +53,7 @@ import { DashboardModule } from './routes/dashboard/dashboard.module'
 		PaymentModule,
 		SlideShowModule,
 		DashboardModule,
+		ReviewModule,
 	],
 	controllers: [AppController],
 	providers: [

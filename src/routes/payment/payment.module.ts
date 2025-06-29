@@ -5,14 +5,15 @@ import { PaymentRepo } from 'src/routes/payment/payment.repo'
 import { PaymentProducer } from 'src/routes/payment/payment.producer'
 import { BullModule } from '@nestjs/bullmq'
 import { PAYMENT_QUEUE_NAME } from 'src/shared/constants/queue.constant'
+import { PaymentGateway } from 'src/websockets/payment.gateway'
 
 @Module({
-  imports: [
-    BullModule.registerQueue({
-      name: PAYMENT_QUEUE_NAME,
-    }),
-  ],
-  providers: [PaymentService, PaymentRepo, PaymentProducer],
-  controllers: [PaymentController],
+	imports: [
+		BullModule.registerQueue({
+			name: PAYMENT_QUEUE_NAME,
+		}),
+	],
+	providers: [PaymentService, PaymentRepo, PaymentProducer, PaymentGateway],
+	controllers: [PaymentController],
 })
 export class PaymentModule {}

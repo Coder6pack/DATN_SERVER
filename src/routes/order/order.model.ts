@@ -51,13 +51,26 @@ export const GetOrderParamsSchema = z
 	})
 	.strict()
 
+export const GetOrderDetailManageSchema = z
+	.object({
+		userId: z.number(),
+	})
+	.strict()
+
 export const UpdateOrderBodySchema = OrderSchema.pick({
 	status: true,
+}).strict()
+
+export const UpdateOrderResSchema = GetOrderDetailResSchema.omit({
+	createdById: true,
+	deletedAt: true,
+	deletedById: true,
+	updatedById: true,
+	items: true,
 })
 
-export const UpdateOrderResSchema = GetOrderDetailResSchema
-
-export type UpdateOrderResType = GetOrderDetailResType
+export type GetOrderDetailManageType = z.infer<typeof GetOrderDetailManageSchema>
+export type UpdateOrderResType = z.infer<typeof UpdateOrderResSchema>
 export type UpdateOrderBodyType = z.infer<typeof UpdateOrderBodySchema>
 export type GetOrderListResType = z.infer<typeof GetOrderListResSchema>
 export type GetOrderListQueryType = z.infer<typeof GetOrderListQuerySchema>
