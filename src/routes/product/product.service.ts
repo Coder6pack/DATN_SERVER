@@ -79,10 +79,13 @@ export class ProductService {
 
 	async delete({ id, deletedById }: { id: number; deletedById: number }) {
 		try {
-			await this.productRepo.delete({
-				id,
-				deletedById,
-			})
+			await this.productRepo.delete(
+				{
+					id,
+					deletedById,
+				},
+				true,
+			)
 			return {
 				message: 'Delete successfully',
 			}

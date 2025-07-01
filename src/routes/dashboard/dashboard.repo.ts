@@ -101,7 +101,6 @@ export class DashboardRepo {
 			revenueByDateObj[formatInTimeZone(i, 'Asia/Saigon', 'dd/MM/yyyy')] = 0
 		}
 
-		// Số lượng bàn đang được sử dụng
 		const orderNumberObj: { [key: number]: boolean } = {}
 		orders.forEach((order) => {
 			if (order.payment.status === PaymentStatus.SUCCESS) {

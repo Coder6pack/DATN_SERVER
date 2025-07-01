@@ -48,6 +48,7 @@ export class CategoryService {
 			await this.categoryRepo.delete({
 				id,
 				deletedById,
+				isHard: true,
 			})
 			return {
 				message: 'Delete successfully',

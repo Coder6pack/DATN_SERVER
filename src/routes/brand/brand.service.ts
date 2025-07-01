@@ -46,10 +46,13 @@ export class BrandService {
 
 	async delete({ id, deletedById }: { id: number; deletedById: number }) {
 		try {
-			await this.brandRepo.delete({
-				id,
-				deletedById,
-			})
+			await this.brandRepo.delete(
+				{
+					id,
+					deletedById,
+				},
+				true,
+			)
 			return {
 				message: 'Delete successfully',
 			}

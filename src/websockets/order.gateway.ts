@@ -11,7 +11,7 @@ import { Server, Socket } from 'socket.io'
 
 @WebSocketGateway({
 	cors: {
-		origin: 'https://fashion-store-three-gamma.vercel.app', // Chỉ định rõ origin của client Next.js
+		origin: ['https://fashion-store-three-gamma.vercel.app', 'http://localhost:3000'],
 		methods: ['GET', 'POST'],
 		credentials: true,
 	},

@@ -7,8 +7,7 @@ import envConfig from './shared/config'
 async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule)
 	app.enableCors({
-		// origin: 'http://localhost:3000', // Chỉ định origin của client
-		origin: 'https://fashion-store-three-gamma.vercel.app', // Chỉ định origin của client
+		origin: ['https://fashion-store-three-gamma.vercel.app', 'http://localhost:3000'],
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 		credentials: true,
 	})
