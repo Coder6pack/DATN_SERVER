@@ -1,0 +1,23 @@
+Backend:
+    -NestJS:https://docs.nestjs.com/
+    -Zod:https://v3.zod.dev/
+    -Prisma:https://www.prisma.io/docs/getting-started
+    -Resend:https://resend.com/docs/dashboard/emails/introduction
+    -Socket.io:https://socket.io/docs/v4/
+    -Postgresql:https://www.postgresql.org/docs/
+    -AWS S3 SDK Client: https://github.com/aws/aws-sdk-js-v3/tree/main/clients/client-s3
+    -AWS SDK lib storage: https://github.com/aws/aws-sdk-js-v3/tree/main/lib/lib-storage
+    -AWS S3 SDK request presigner: https://github.com/aws/aws-sdk-js-v3/tree/main/packages/s3-request-presigner
+    -Webhook Sepay:https://docs.sepay.vn/
+    -BullMQ: https://bullmq.io/
+Frontend:   
+    -NextJS:https://nextjs.org/docs
+    -ReactJS:https://react.dev/learn
+    -Shadcn/ui:https://ui.shadcn.com/docs/installation
+    -React-hook-form:https://react-hook-form.com/get-started
+    -Tanstack Query: https://tanstack.com/query/v4/docs/framework/react/guides/queries
+    -Recharts: https://github.com/recharts/recharts
+    -Socket.io client: https://github.com/socketio/socket.io/tree/main/packages/socket.io-client#readme
+    -JsonWebToken: https://github.com/auth0/node-jsonwebtoken#readme
+    -TailwindCSS: https://tailwindcss.com/docs/installation/using-vite
+    -ESLint:https://eslint.org/docs/latest/

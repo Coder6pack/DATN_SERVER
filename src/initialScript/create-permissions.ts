@@ -4,7 +4,20 @@ import { HTTPMethod } from 'src/shared/constants/http.constant'
 import { RoleName } from 'src/shared/constants/role.constant'
 import { PrismaService } from 'src/shared/services/prisma.service'
 
-const SellerModule = ['AUTH', 'MEDIA', 'MANAGE-PRODUCT', 'PRODUCT-TRANSLATION', 'PROFILE', 'CART', 'ORDERS', 'REVIEWS']
+const SellerModule = [
+	'AUTH',
+	'MEDIA',
+	'MANAGE-PRODUCT',
+	'PROFILE',
+	'CART',
+	'ORDERS',
+	'REVIEWS',
+	'DASHBOARDS',
+	'BRANDS',
+	'CATEGORIES',
+	'PRODUCTS',
+	'SLIDESHOWS',
+]
 const ClientModule = ['AUTH', 'MEDIA', 'PROFILE', 'CART', 'ORDERS', 'REVIEWS']
 const prisma = new PrismaService()
 
@@ -44,7 +57,6 @@ async function bootstrap() {
 		acc[`${item.method}-${item.path}`] = item
 		return acc
 	}, {})
-
 	// Tìm permissions trong database mà không tồn tại trong availableRoutes
 	const permissionsToDelete = permissionsInDb.filter((item) => {
 		return !availableRoutesMap[`${item.method}-${item.path}`]

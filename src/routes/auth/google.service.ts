@@ -82,7 +82,7 @@ export class GoogleService {
 					email: data.email,
 					name: data.name ?? '',
 					avatar: data.picture ?? '',
-					phoneNumber: '',
+					phoneNumber: '9999999999',
 					roleId: clientRoleId,
 					password: hashPassword,
 				})

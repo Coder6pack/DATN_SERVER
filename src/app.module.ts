@@ -24,7 +24,6 @@ import { WebsocketModule } from './websockets/websocket.module'
 import { SlideShowModule } from './routes/slideShow/slide-show.module'
 import { DashboardModule } from './routes/dashboard/dashboard.module'
 import { ReviewModule } from './routes/review/review.module'
-
 @Module({
 	imports: [
 		BullModule.forRoot({
